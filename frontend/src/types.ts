@@ -1,4 +1,4 @@
-interface Reserva{
+ export interface Reserva{
     id: number,
     cliente: string,
     litros: number, 
@@ -6,7 +6,7 @@ interface Reserva{
     fecha: string | null,
 }
 
-interface Producto {
+export interface Producto {
     id:number,
     nombre: string,
     cantidad: number,
