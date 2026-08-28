@@ -6,6 +6,9 @@ export default function ReservaCard({ reserva }: { reserva: Reserva }) {
       <p>{reserva.cliente} </p> 
       <p>{reserva.litros} </p> 
       <p>{reserva.estado} </p> 
+      <p>{reserva.id} </p>
+
     </div>
+    
   );
 }

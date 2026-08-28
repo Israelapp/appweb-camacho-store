@@ -2,6 +2,7 @@ import { Reserva } from "../types";
 import ReservaCard from "../components/ReservaCard";
 
 
+
 export default async function Home(){ 
 
     const respuesta = await fetch("http://127.0.0.1:5000/api/reservas");
@@ -11,7 +12,7 @@ export default async function Home(){
     return (
     <div>
       {datos.map((reserva: Reserva) => (
-        <ReservaCard reserva={reserva} />
+        <ReservaCard key={reserva.id} reserva={reserva}  />
       ))}
     </div>
   );
