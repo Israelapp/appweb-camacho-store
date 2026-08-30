@@ -1,5 +1,6 @@
 import { Reserva } from "../types";
 import ReservaCard from "../components/ReservaCard";
+import ReservaForm from "../components/ReservaForm"
 
 
 
@@ -11,10 +12,13 @@ export default async function Home(){
 
     return (
     <div>
+       <ReservaForm />
       {datos.map((reserva: Reserva) => (
         <ReservaCard key={reserva.id} reserva={reserva}  />
       ))}
     </div>
   );
-  }
+  
+}
+
   
