@@ -1,4 +1,5 @@
-import  { Producto } from "../../types";
+import { Producto } from "../../types"
+import ProductoForm from "../../components/ProductoForm" 
 import ProductoCard from "../../components/ProductoCard";
 
 export default async function Inventario() {
@@ -9,6 +10,7 @@ export default async function Inventario() {
 
     return (
         <div>
+            <ProductoForm/>
             {datos.map((producto: Producto) => (
                 <ProductoCard key={producto.id} producto={producto} />
             ))}
