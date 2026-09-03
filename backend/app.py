@@ -44,10 +44,19 @@ class Reserva (db.Model):
             'fecha': self.fecha,
         }
     
-#productos = [
- #   {"id": 1, "nombre": "Bicicleta", "cantidad": 8, "precio": 25.0},
-  #  {"id": 2, "nombre": "Casco", "cantidad": 15, "precio": 5.0},
-#]
+class Cliente (db.Model):
+    id = db.Column (db.Integer, primary_key=True)
+    nombre = db.Column (db.String (80), nullable=False)
+    telefono = db.Column (db.String(80), nullable=False)
+    direccion = db.Column (db.String (80),  nullable=False)
+
+    def to_dict (self):
+        return{
+            'id': self.id,
+            'nombre': self.nombre,
+            'telefono': self.telefono,
+            'direccion': self.direccion,
+        }
 
 
 @app.route("/")
@@ -137,7 +146,7 @@ def crear_reserva():
     if not datos or "litros" not in datos:
         return jsonify ({"error": "Los litros son obligatorio"}), 400
     if not datos or "cliente" not in datos:
-        return jsonify ({"error": "Los debe incluir los datos correctos"}), 400
+        return jsonify ({"error": "Debe incluir los datos correctos"}), 400
 
 
     reserva_nueva = Reserva (
@@ -190,6 +199,73 @@ def actualizar_reserva (reserva_id):
 
     db.session.commit()
     return jsonify(reserva.to_dict()), 200
+
+@app.route ("/api/cliente", methods = ["GET"])
+def todo_clientes ():
+    cliente_bd = Cliente.query.all()
+    lista=[]
+    for cliente in cliente_bd:
+            lista.append(cliente.to_dict())
+    return jsonify(lista)
+
+@app.route ("/api/clientes", methods =["POST"])
+def crear_nuevo ():
+    datos = request.get_json()
+
+
+    if not datos or "nombre" not in datos:
+        return jsonify ({"error": "El nombre es obligatorio"}), 400
+      
+      
+    nuevo_cliente = Cliente (
+            nombre=datos['nombre'],
+            telefono=datos.get('telefono'), 
+            direccion=datos.get('direccion'),
+            
+        
+        )
+    
+    db.session.add(nuevo_cliente)
+    db.session.commit()
+    return jsonify(nuevo_cliente.to_dict()), 201
+
+@app.route ("/api/clientes/<int:cliente_id>", methods = ["PUT"])
+def obtener_cliente (cliente_id):
+    cliente = Cliente.query.get(cliente_id)
+
+    if not cliente:
+        return jsonify({"error": "Producto no encontrado"}), 404
+   
+    datos = request.get_json()
+   
+   
+    if "nombre" in datos:
+         cliente.nombre = datos["nombre"]
+   
+    if "telefono" in datos:
+           cliente.telefono = datos["telefono"]
+   
+    if "direccion" in datos:
+        cliente.direccion = datos["direccion"]
+
+    
+    db.session.commit()
+    return jsonify(cliente.to_dict()), 200
+
+@app.route ("/api/clientes/<int:cliente_id>", methods =["DELETE"])
+def delete_cliente (cliente_id):
+    cliente = Cliente.query.get(cliente_id)
+
+    if not cliente:
+        return jsonify({"error": "Cliente no encontrado"}), 404
+    
+
+        
+    db.session.delete(cliente)
+    db.session.commit()
+    return jsonify ({"Eliminado": "Cliente Eliminado"})
+    
+
 
 with app.app_context():
     db.create_all()

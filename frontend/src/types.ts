@@ -13,3 +13,10 @@ export interface Producto {
     precio:number,
 
 }
+
+export interface Cliente {
+    id: number,
+    nombre: string,
+    telefono: string,
+    direccion: string,
+}
