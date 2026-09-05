@@ -5,6 +5,7 @@ from extensions import db
 from routes.productos import productos_bp
 from routes.reservas import reservas_bp
 from routes.clientes import clientes_bp
+from routes.pagos import pagos_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -16,6 +17,7 @@ db.init_app(app)
 app.register_blueprint(productos_bp)
 app.register_blueprint(reservas_bp)
 app.register_blueprint(clientes_bp)
+app.register_blueprint(pagos_bp)
 
 
 @app.route("/")
