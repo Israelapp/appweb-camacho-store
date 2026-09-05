@@ -1,4 +1,4 @@
-"use cliente"
+"use client"
 
 import {useState} from "react"
 
@@ -7,7 +7,6 @@ import{ useRouter} from "next/navigation"
 
 export default function ClienteForm(){
     const router = useRouter();
-    const [id, setId] = useState ("");
     const [nombre,setNombre] = useState ("");
     const [telefono,setTelefono] = useState ("");
     const [direccion,setDireccion] = useState ("");
@@ -18,9 +17,9 @@ export default function ClienteForm(){
         await fetch ("http://127.0.0.1:5000/api/clientes", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify ({ id, nombre, telefono, direccion }),
+        body: JSON.stringify ({ nombre, telefono, direccion }),
         });
-        setId ("");
+
         setNombre ("");
         setTelefono("");
         setDireccion("");
