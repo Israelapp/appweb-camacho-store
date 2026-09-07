@@ -29,3 +29,10 @@ export interface Pago {
     metodo: string,
     fecha: string | null,
 }
+
+export interface Resumen {
+    total_clientes: number,
+    reservas_pendientes: number,
+    reservas_confirmadas: number,
+    total_ingresos: number,
+}
