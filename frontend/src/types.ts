@@ -20,3 +20,11 @@ export interface Cliente {
     telefono: string,
     direccion: string,
 }
+
+
+export interface Pago {
+    cliente: string,
+    monto: number,
+    metodo: string,
+    fecha: string | null,
+}

@@ -1,4 +1,4 @@
-import { Reserva } from "../types";
+import { Reserva } from "../../types";
 
 export default function ReservaCard({ reserva }: { reserva: Reserva }) {
   return (

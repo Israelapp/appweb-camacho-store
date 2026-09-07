@@ -4,7 +4,7 @@ from models.Clientes import Clientes
 
 clientes_bp = Blueprint ('clientes', __name__)
 
-@clientes_bp.route ("/api/cliente", methods = ["GET"])
+@clientes_bp.route ("/api/clientes", methods = ["GET"])
 def todo_clientes ():
     cliente_bd = Clientes.query.all()
     lista=[]

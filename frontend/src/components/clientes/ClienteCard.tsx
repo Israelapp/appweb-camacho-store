@@ -1,4 +1,4 @@
-import {Cliente} from "../types";
+import {Cliente} from "../../types";
 
 export default function ClienteCard ({cliente} : {cliente: Cliente}) {
     return (

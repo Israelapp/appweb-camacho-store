@@ -1,4 +1,4 @@
-import { Producto } from "../types";
+import { Producto } from "../../types";
 
 export default function ProductoCard({ producto }: { producto: Producto }) {
   return (

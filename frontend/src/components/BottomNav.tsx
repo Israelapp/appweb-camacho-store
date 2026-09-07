@@ -8,7 +8,7 @@ export default function BottomNav() {
 
   return (
     <div className="flex justify-between w-full bg-white p-4 fixed bottom-0 left-0">
-      <Link href="/" className={pathname === "/" ? "text-blue-600" : "text-gray-500"}>
+      <Link href="/reservas" className={pathname === "/reservas" ? "text-blue-600" : "text-gray-500"}>
         Reservas
       </Link>
       <Link href="/inventario" className={pathname === "/inventario" ? "text-blue-600" : "text-gray-500"}>
@@ -19,6 +19,10 @@ export default function BottomNav() {
       </Link>
       <Link href="/clientes" className={pathname === "/clientes" ? "text-blue-600" : "text-gray-500"}>
         Clientes
+      </Link>
+
+       <Link href="/pago" className={pathname === "/pago" ? "text-blue-600" : "text-gray-500"}>
+        Pagos
       </Link>
     </div>
   );
