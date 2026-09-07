@@ -23,6 +23,7 @@ export interface Cliente {
 
 
 export interface Pago {
+    id: number,
     cliente: string,
     monto: number,
     metodo: string,
