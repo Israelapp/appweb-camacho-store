@@ -8,25 +8,25 @@ export default function BottomNav() {
 
   return (
     <div className="flex justify-between w-full bg-white p-4 fixed bottom-0 left-0">
-      <Link href="/reservas" className= {`flex flex-col items-center ${pathname === "/reservas" ? "text-blue-600" : "text-gray-500"}`}>
+      <Link href="/reservas" className= {`flex flex-col items-center ${pathname === "/reservas" ? "text-blue-600" : "text-brand"}`}>
         <ClipboardList size={20} />
         Reservas
       </Link>
-      <Link href="/inventario" className=  {`flex flex-col items-center ${pathname === "/inventario" ? "text-blue-600" : "text-gray-500"}`}>
+      <Link href="/inventario" className=  {`flex flex-col items-center ${pathname === "/inventario" ? "text-blue-600" : "text-brand"}`}>
         <Package size= {20}/>
         Inventario
       </Link>
-      <Link href="/reportes" className= {`flex flex-col items-center ${pathname === "/reportes" ? "text-blue-600" : "text-gray-500"}`}>
+      <Link href="/reportes" className= {`flex flex-col items-center ${pathname === "/reportes" ? "text-blue-600" : "text-brand"}`}>
 
       <BarChart3 size= {20} />
         Reportes
       </Link>
-      <Link href="/clientes" className= {`flex flex-col items-center  ${pathname === "/clientes" ? "text-blue-600" : "text-gray-500"}`}>
+      <Link href="/clientes" className= {`flex flex-col items-center  ${pathname === "/clientes" ? "text-blue-600" : "text-brand"}`}>
         <Users size={20}/>
         Clientes
       </Link>
 
-       <Link href="/pago" className={`flex flex-col items-center  ${pathname === "/pago" ? "text-blue-600" : "text-gray-500"}`}>
+       <Link href="/pago" className={`flex flex-col items-center  ${pathname === "/pago" ? "text-blue-600" : "text-brand"}`}>
 
         <DollarSign size= {20} />
           Pagos

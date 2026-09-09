@@ -38,7 +38,7 @@ export default function ReservaForm() {
         placeholder="Litros"
         className="border p-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
-      <button type="submit" className="bg-blue-600 text-white p-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+      <button type="submit"className="bg-brand text-white p-2 rounded-lg font-medium hover:bg-brand-dark transition-colors">
         Crear reserva
       </button>
     </form>
