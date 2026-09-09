@@ -36,30 +36,30 @@ export default function PagoForm () {
             value={cliente} 
             onChange= {(e) => setCliente (e.target.value)}
             placeholder="Cliente"
-            className="border p-2"            
+           className="border p-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"           
             />
 
             <input type="text" 
             value={monto} 
             onChange={(e) => setMonto(Number(e.target.value))}
             placeholder="Monto"
-            className="border p-2"
+            className="border p-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
             <input type="text"
             value={metodo} 
             onChange={(e) => setMetodo (e.target.value)}
             placeholder="Metodo"
-            className="border p-2"
+            className="border p-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
              />
              <input type="text" 
              value={fecha} 
              onChange={(e) => setFecha (e.target.value)} 
              placeholder="Fecha"
-             className="border p-2"
+             className="border p-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
              />
 
-             <button type= "submit" className="bg-blue-600 text-white p-2">
+             <button type= "submit" className="bg-blue-600 text-white p-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
                 
                 Realizar Pago
              </button>

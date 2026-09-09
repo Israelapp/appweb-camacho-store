@@ -31,14 +31,14 @@ export default function ProductoForm(){
         value={nombre}
         onChange={(e) => setNombre(e.target.value)}
         placeholder="Nombre"
-        className="border p-2"
+        className="border p-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <input
         type="number"
         value={cantidad}
         onChange={(e) => setCantidad(Number(e.target.value))}
         placeholder= "Cantidad"
-        className="border p-2"
+        className="border p-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
 
        <input
@@ -46,11 +46,11 @@ export default function ProductoForm(){
         value={precio}
         onChange={(e) => setPrecio(Number(e.target.value))}
         placeholder="Precio"
-        className="border p-2"
+        className="border p-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
 
         />
 
-        <button type="submit" className="bg-blue-600 text-white p-2">
+        <button type="submit" className="bg-blue-600 text-white p-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
         Crear Producto
       </button>
     </form>

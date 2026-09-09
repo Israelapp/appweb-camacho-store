@@ -29,16 +29,16 @@ export default function ReservaForm() {
         value={cliente}
         onChange={(e) => setCliente(e.target.value)}
         placeholder="Cliente"
-        className="border p-2"
+        className="border p-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
       <input
         type="number"
         value={litros}
         onChange={(e) => setLitros(Number(e.target.value))}
         placeholder="Litros"
-        className="border p-2"
+        className="border p-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
-      <button type="submit" className="bg-blue-600 text-white p-2">
+      <button type="submit" className="bg-blue-600 text-white p-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
         Crear reserva
       </button>
     </form>
