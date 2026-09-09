@@ -11,6 +11,7 @@ export default async function clientesPage () {
     return(
 
     <div> 
+        <h1 className="text-2xl font-bold text-gray-800 p-4 pb-0">Clientes</h1>
         <ClienteForm/>
          {datos.map((cliente: Cliente) =>  (
             <ClienteCard key={cliente.id} cliente={cliente} />

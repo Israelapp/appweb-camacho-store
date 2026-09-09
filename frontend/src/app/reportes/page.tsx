@@ -7,6 +7,7 @@ export default async function Reportes() {
 
   return (
     <div>
+      <h1 className="text-2xl font-bold text-gray-800 p-4 pb-0">Reportes</h1>
         <p>Total de clientes: {datos.total_clientes}</p>
         <p>Reservas pendientes: {datos.reservas_pendientes}</p>
         <p>Reservas confirmadas: {datos.reservas_confirmadas}</p>

@@ -8,6 +8,7 @@ export default async function ReservaPage() {
 
   return (
     <div>
+      <h1 className="text-2xl font-bold text-gray-800 p-4 pb-0">Reservas</h1>
       <ReservaForm />
 
       {datos.map((reserva: Reserva) => (

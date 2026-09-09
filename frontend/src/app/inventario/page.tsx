@@ -11,6 +11,7 @@ export default async function Inventario() {
 
     return (
         <div>
+            <h1 className="text-2xl font-bold text-gray-800 p-4 pb-0">Inventario</h1>
             <ProductoForm/>
             {datos.map((producto: Producto) => (
                 <ProductoCard key={producto.id} producto={producto} />
