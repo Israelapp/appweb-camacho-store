@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify
 from models.Clientes import Clientes
 from models.Reservas import Reservas
 from models.Pagos import Pagos
+from models.Producto import Producto
 
 
 reportes_bp = Blueprint('reportes', __name__)
@@ -20,7 +21,10 @@ def resumen():
             confirmadas = confirmadas + 1
 
     pagos = Pagos.query.all()
-    total_ingresos = sum(pago.monto for pago in pagos)       
+    total_ingresos = sum(pago.monto for pago in pagos)   
+
+    cantidades = Producto.query.all()
+    total_stock = sum(cantidad.cantidad for cantidad in cantidades)    
 
     return jsonify({
         
@@ -28,4 +32,5 @@ def resumen():
         "reservas_pendientes": pendientes,
         "reservas_confirmadas": confirmadas,
         "total_ingresos": total_ingresos,
+        "total_stock": total_stock,
 })

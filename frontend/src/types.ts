@@ -35,4 +35,5 @@ export interface Resumen {
     reservas_pendientes: number,
     reservas_confirmadas: number,
     total_ingresos: number,
+    total_stock: number,
 }
