@@ -16,8 +16,12 @@ export default function DescargarPdfBoton() {
   }
 
   return (
-    <button onClick={handleDownload} className="bg-blue-600 text-white p-2 inline-block">
-      Descargar PDF
-    </button>
+    <div>
+      <button onClick={handleDownload} className="bg-brand text-white p-2 rounded-lg font-medium hover:bg-brand-dark transition-colors">
+        Descargar PDF
+      </button>
+
+    </div>
+
   );
 }
