@@ -1,10 +1,16 @@
 import { Resumen } from "../types";
 import StatCard from "../components/StatCard";
 import StockGauge from "../components/StockGauge";
+import { Reserva } from "../types";
+import OrdenRow from "../components/OrdenRow";
 
 export default async function Home() {
   const respuesta = await fetch("http://127.0.0.1:5000/api/reportes/resumen");
   const datos: Resumen = await respuesta.json();
+
+  const respuestaReservas = await fetch("http://127.0.0.1:5000/api/reservas");
+  const todasReservas: Reserva[] = await respuestaReservas.json();
+  const recientes = [...todasReservas].sort((a, b) => b.id - a.id).slice(0, 3);
 
   return (
     <div className="p-4">
@@ -15,8 +21,16 @@ export default async function Home() {
         <StatCard label="Confirmadas" value={datos.reservas_confirmadas} color="bg-green-50 text-green-700" />
         <StatCard label="Ingresos" value={`$${datos.total_ingresos}`} color="bg-purple-50 text-purple-700" />
         <StatCard label="Stock" value={datos.total_stock} color="bg-cyan-50 text-cyan-700" />
-        </div>
-        <StockGauge actual={datos.total_stock} capacidad={1000} />
+      </div>
+      <StockGauge actual={datos.total_stock} capacidad={1000} />
+      <div className="bg-white rounded-xl p-4 border border-gray-100 mt-3">
+        <p className="text-sm font-medium text-gray-600 mb-2">Órdenes recientes</p>
+        {recientes.map((reserva) => (
+          <OrdenRow key={reserva.id} reserva={reserva} />
+        ))}
+      </div>
     </div>
+
+
   );
 }
