@@ -14,7 +14,7 @@ export default function ProductoForm(){
     {
         e.preventDefault ();
 
-        await fetch ("http://NEXT_PUBLIC_API_URL/api/inventario", {
+        await fetch (`${process.env.NEXT_PUBLIC_API_URL}/api/producto`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ nombre, cantidad, precio }),

@@ -15,7 +15,7 @@ export default function PagoForm () {
         e.preventDefault();
 
 
-        await fetch ("http://NEXT_PUBLIC_API_URL/api/pagos", {
+        await fetch (`${process.env.NEXT_PUBLIC_API_URL}/api/pago`, {
             method:"POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify ({cliente, monto, metodo, fecha}),

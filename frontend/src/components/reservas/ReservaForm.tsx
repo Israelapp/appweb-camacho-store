@@ -11,7 +11,7 @@ export default function ReservaForm() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    await fetch("http://NEXT_PUBLIC_API_URL/api/reservas", {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reservas`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ cliente, litros }),
