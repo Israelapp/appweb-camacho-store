@@ -3,7 +3,7 @@ import ReservaCard from "../../components/reservas/ReservaCard";
 import ReservaForm from "../../components/reservas/ReservaForm";
 
 export default async function ReservaPage() {
-  const respuesta = await fetch("http://127.0.0.1:5000/api/reservas");
+  const respuesta = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reservas`);
   const datos: Reserva[] = await respuesta.json();
 
   return (

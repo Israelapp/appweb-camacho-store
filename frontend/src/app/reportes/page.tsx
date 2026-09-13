@@ -3,8 +3,8 @@ import StatCard from "../../components/StatCard";
 import DescargarPdfBoton from "../../components/reportes/DescargarPdfBoton";
 
 export default async function Reportes() {
-  const respuesta = await fetch("http://127.0.0.1:5000/api/reportes/resumen");
-  const datos: Resumen = await respuesta.json();
+ const respuesta = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reportes/resumen`);
+ const datos: Resumen = await respuesta.json();
 
   return (
     <div className="p-4">

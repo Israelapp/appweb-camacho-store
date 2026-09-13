@@ -3,7 +3,7 @@
 
 export default function DescargarPdfBoton() {
   async function handleDownload() {
-    const respuesta = await fetch("http://127.0.0.1:5000/api/reportes/resumen/pdf");
+    const respuesta = await fetch("http://NEXT_PUBLIC_API_URL/api/reportes/resumen/pdf");
     const blob = await respuesta.blob();
     const url = window.URL.createObjectURL(blob);
 

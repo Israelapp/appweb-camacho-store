@@ -13,7 +13,7 @@ export default function ClienteForm() {
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
-        await fetch("http://127.0.0.1:5000/api/clientes", {
+        await fetch("http://NEXT_PUBLIC_API_URL/api/clientes", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ nombre, telefono, direccion }),
