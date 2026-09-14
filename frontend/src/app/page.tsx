@@ -5,10 +5,10 @@ import { Reserva } from "../types";
 import OrdenRow from "../components/OrdenRow";
 
 export default async function Home() {
-  const respuesta = await fetch("http://127.0.0.1:5000/api/reportes/resumen");
+  const respuesta = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reportes/resumen`);
   const datos: Resumen = await respuesta.json();
 
-  const respuestaReservas = await fetch("http://127.0.0.1:5000/api/reservas");
+  const respuestaReservas = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reservas`);
   const todasReservas: Reserva[] = await respuestaReservas.json();
   const recientes = [...todasReservas].sort((a, b) => b.id - a.id).slice(0, 3);
 
