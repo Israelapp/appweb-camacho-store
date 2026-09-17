@@ -37,3 +37,4 @@ export interface Resumen {
     total_ingresos: number,
     total_stock: number,
 }
+
