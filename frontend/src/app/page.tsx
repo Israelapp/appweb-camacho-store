@@ -1,8 +1,11 @@
 import { Resumen } from "../types";
 import StatCard from "../components/StatCard";
 import StockGauge from "../components/StockGauge";
+import QrDescarga from "../components/QrDescarga"
 import { Reserva } from "../types";
 import OrdenRow from "../components/OrdenRow";
+
+
 
 export default async function Home() {
   const respuesta = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reportes/resumen`);
@@ -23,6 +26,7 @@ export default async function Home() {
         <StatCard label="Stock" value={datos.total_stock} color="bg-cyan-50 text-cyan-700" />
       </div>
       <StockGauge actual={datos.total_stock} capacidad={1000} />
+      <QrDescarga />
       <div className="bg-white rounded-xl p-4 border border-gray-100 mt-3">
         <p className="text-sm font-medium text-gray-600 mb-2">Órdenes recientes</p>
         {recientes.map((reserva) => (
