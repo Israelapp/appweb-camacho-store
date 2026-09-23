@@ -3,12 +3,12 @@
 
 import { useState } from "react";
 import PagoForm from "../components/pagos/PagoForm";
+import QrDescarga from "../components/QrDescarga"; // Importa tu componente QR
 
 export default function HomePage() {
-  // Estado para alternar entre "reserva" y "pago"
   const [opcionActiva, setOpcionActiva] = useState<"reserva" | "pago">("reserva");
 
-  // Estados para el formulario de Reserva
+  // Estados para Reserva
   const [clienteReserva, setClienteReserva] = useState("");
   const [litros, setLitros] = useState<number | string>(20);
   const [fechaReserva, setFechaReserva] = useState(
@@ -17,10 +17,9 @@ export default function HomePage() {
   const [cargandoReserva, setCargandoReserva] = useState(false);
   const [mensajeReserva, setMensajeReserva] = useState(false);
 
-  const PRECIO_POR_LITRO = 0.50; // Ajusta el precio según tu tarifa
+  const PRECIO_POR_LITRO = 0.50;
   const totalEstimado = (Number(litros) || 0) * PRECIO_POR_LITRO;
 
-  // Manejador para enviar Reserva
   async function handleReservaSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!clienteReserva.trim() || !litros) return;
@@ -65,7 +64,7 @@ export default function HomePage() {
           <p className="text-sm text-gray-500">Recarga de agua purificada</p>
         </div>
 
-        {/* Selector de Pestañas / Opciones */}
+        {/* Selector de Pestañas */}
         <div className="grid grid-cols-2 gap-1 p-1 bg-gray-100 rounded-xl">
           <button
             type="button"
@@ -91,7 +90,7 @@ export default function HomePage() {
           </button>
         </div>
 
-        {/* OPCCIÓN 1: Formulario de Reserva */}
+        {/* Formulario de Reserva */}
         {opcionActiva === "reserva" && (
           <form onSubmit={handleReservaSubmit} className="flex flex-col gap-3">
             {mensajeReserva && (
@@ -157,12 +156,15 @@ export default function HomePage() {
           </form>
         )}
 
-        {/* OPCIÓN 2: Formulario de Pago */}
+        {/* Formulario de Pago */}
         {opcionActiva === "pago" && (
           <div>
             <PagoForm />
           </div>
         )}
+
+        {/* Componente QrDescarga */}
+        <QrDescarga />
 
       </div>
     </div>
