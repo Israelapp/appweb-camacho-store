@@ -1,6 +1,6 @@
-import { Resumen } from "../../types";
-import StatCard from "../../components/StatCard";
-import DescargarPdfBoton from "../../components/reportes/DescargarPdfBoton";
+import { Resumen } from "../../../types";
+import StatCard from "../../../components/StatCard";
+import DescargarPdfBoton from "../../../components/reportes/DescargarPdfBoton";
 
 export default async function Reportes() {
  const respuesta = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reportes/resumen`);

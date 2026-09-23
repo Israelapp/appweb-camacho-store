@@ -1,43 +1,74 @@
 "use client";
-import { LayoutDashboard, ClipboardList, Package, BarChart3, Users, DollarSign } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 
+import { 
+  LayoutDashboard, 
+  ClipboardList, 
+  Package, 
+  BarChart3, 
+  Users, 
+  DollarSign, 
+  LogOut 
+} from "lucide-react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  function handleLogout() {
+    // Elimina la cookie de autenticación de admin
+    document.cookie = "admin_token=; path=/; max-age=0;";
+    router.push("/admin/login");
+    router.refresh();
+  }
+
+  const menuItems = [
+    { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+    { name: "Reservas", href: "/admin/reservas", icon: ClipboardList },
+    { name: "Inventario", href: "/admin/inventario", icon: Package },
+    { name: "Reportes", href: "/admin/reportes", icon: BarChart3 },
+    { name: "Clientes", href: "/admin/clientes", icon: Users },
+    { name: "Pagos", href: "/admin/pago", icon: DollarSign },
+  ];
 
   return (
-    <div className="flex flex-col w-64 h-full bg-white p-4 fixed left-0 top-0 border-r border-gray-100">
-      <Link href="/" className="text-xl font-bold text-brand mb-6 block">
-        Camacho Store
-      </Link>
+    <div className="flex flex-col justify-between w-64 h-full bg-white p-4 fixed left-0 top-0 border-r border-gray-100">
+      <div>
+        <Link href="/admin" className="text-xl font-bold text-brand mb-6 block">
+          Camacho Store
+        </Link>
 
-      <Link href="/" className={`flex items-center gap-2 p-2 rounded-lg mb-1 ${pathname === "/" ? "bg-brand text-white" : "text-gray-600 hover:bg-gray-50"}`}>
-        <LayoutDashboard size={20} />
-        Dashboard
-      </Link>
+        <nav className="flex flex-col gap-1">
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = pathname === item.href;
 
-      <Link href="/reservas" className={`flex items-center gap-2 p-2 rounded-lg mb-1 ${pathname === "/reservas" ? "bg-brand text-white" : "text-gray-600 hover:bg-gray-50"}`}>
-        <ClipboardList size={20} />
-        Reservas
-      </Link>
-      <Link href="/inventario" className={`flex items-center gap-2 p-2 rounded-lg mb-1 ${pathname === "/inventario" ? "bg-brand text-white" : "text-gray-600 hover:bg-gray-50"}`}>
-        <Package size={20} />
-        Inventario
-      </Link>
-      <Link href="/reportes" className={`flex items-center gap-2 p-2 rounded-lg mb-1 ${pathname === "/reportes" ? "bg-brand text-white" : "text-gray-600 hover:bg-gray-50"}`}>
-        <BarChart3 size={20} />
-        Reportes
-      </Link>
-      <Link href="/clientes" className={`flex items-center gap-2 p-2 rounded-lg mb-1 ${pathname === "/clientes" ? "bg-brand text-white" : "text-gray-600 hover:bg-gray-50"}`}>
-        <Users size={20} />
-        Clientes
-      </Link>
-      <Link href="/pago" className={`flex items-center gap-2 p-2 rounded-lg mb-1 ${pathname === "/pago" ? "bg-brand text-white" : "text-gray-600 hover:bg-gray-50"}`}>
-        <DollarSign size={20} />
-        Pagos
-      </Link>
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center gap-2 p-2 rounded-lg transition-colors ${
+                  isActive
+                    ? "bg-brand text-white font-medium"
+                    : "text-gray-600 hover:bg-gray-50"
+                }`}
+              >
+                <Icon size={20} />
+                {item.name}
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
+
+      <button
+        onClick={handleLogout}
+        className="flex items-center gap-2 p-2 rounded-lg text-red-600 hover:bg-red-50 transition-colors w-full font-medium"
+      >
+        <LogOut size={20} />
+        Cerrar Sesión
+      </button>
     </div>
   );
 }

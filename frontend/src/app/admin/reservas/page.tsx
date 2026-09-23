@@ -1,6 +1,6 @@
-import { Reserva } from "../../types";
-import ReservaCard from "../../components/reservas/ReservaCard";
-import ReservaForm from "../../components/reservas/ReservaForm";
+import { Reserva } from "../../../types";
+import ReservaCard from "../../../components/reservas/ReservaCard";
+import ReservaForm from "../../../components/reservas/ReservaForm";
 
 export default async function ReservaPage() {
   const respuesta = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reservas`);

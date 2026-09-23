@@ -1,6 +1,6 @@
-import { Producto } from "../../types"
-import ProductoForm from "../../components/inventario/ProductoForm";
-import ProductoCard from "../../components/inventario/ProductoCard";
+import { Producto } from "../../../types"
+import ProductoForm from "../../../components/inventario/ProductoForm";
+import ProductoCard from "../../../components/inventario/ProductoCard";
 
 
 export default async function Inventario() {

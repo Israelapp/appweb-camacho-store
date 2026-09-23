@@ -1,6 +1,6 @@
-import { Cliente } from "../../types";
-import ClienteForm from "../../components/clientes/ClienteForm"
-import ClienteCard from "../../components/clientes/ClienteCard"
+import { Cliente } from "../../../types";
+import ClienteForm from "../../../components/clientes/ClienteForm"
+import ClienteCard from "../../../components/clientes/ClienteCard"
 
 export default async function clientesPage () {
 
