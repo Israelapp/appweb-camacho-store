@@ -14,18 +14,18 @@ export default function AdminLoginPage() {
     setError("");
     setCargando(true);
 
-    // 🔑 AQUÍ DEFINES LA CONTRASEÑA (Usa la variable de entorno o "1234" por defecto)
+    // PIN o Contraseña válida (Usa la variable de entorno o "1234" por defecto)
     const CLAVE_CORRECTA = process.env.NEXT_PUBLIC_ADMIN_PIN || "1234";
 
     if (password === CLAVE_CORRECTA) {
       // Guardar cookie de sesión para el Admin (expira en 1 día)
       document.cookie = `admin_token=autenticado; path=/; max-age=86400; SameSite=Lax`;
-      
+
       // Redirigir al panel de administración
       router.push("/admin");
       router.refresh();
     } else {
-      setError("Contraseña incorrecta");
+      setError("Contraseña / PIN incorrecto");
     }
 
     setCargando(false);
