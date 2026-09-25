@@ -3,7 +3,7 @@
 import { useState } from "react";
 import PagoForm from "../components/pagos/PagoForm";
 import QrDescarga from "../components/QrDescarga";
-import { supabase } from "../lib/supebase"; // Importación del cliente de Supabase
+import { supabase } from "../lib/supabase"; // Importación del cliente de Supabase
 
 export default function HomePage() {
   const [opcionActiva, setOpcionActiva] = useState<"reserva" | "pago">("reserva");

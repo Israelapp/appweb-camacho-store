@@ -14,31 +14,21 @@ export default function AdminLoginPage() {
     setError("");
     setCargando(true);
 
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
-      });
+    // 🔑 AQUÍ DEFINES LA CONTRASEÑA (Usa la variable de entorno o "1234" por defecto)
+    const CLAVE_CORRECTA = process.env.NEXT_PUBLIC_ADMIN_PIN || "1234";
 
-      const data = await res.json();
-
-      if (res.ok && data.token) {
-        // Guardar cookie de sesión para el Admin (expira en 1 día)
-        document.cookie = `admin_token=${data.token}; path=/; max-age=86400; SameSite=Lax`;
-        
-        // Redirigir al panel de administración
-        router.push("/admin");
-        router.refresh();
-      } else {
-        setError(data.mensaje || "Contraseña incorrecta");
-      }
-    } catch (err) {
-      console.error("Error al iniciar sesión:", err);
-      setError("Error de conexión con el servidor");
-    } finally {
-      setCargando(false);
+    if (password === CLAVE_CORRECTA) {
+      // Guardar cookie de sesión para el Admin (expira en 1 día)
+      document.cookie = `admin_token=autenticado; path=/; max-age=86400; SameSite=Lax`;
+      
+      // Redirigir al panel de administración
+      router.push("/admin");
+      router.refresh();
+    } else {
+      setError("Contraseña incorrecta");
     }
+
+    setCargando(false);
   }
 
   return (
@@ -66,14 +56,14 @@ export default function AdminLoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
-              className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
             />
           </div>
 
           <button
             type="submit"
             disabled={cargando}
-            className="w-full bg-brand text-white p-3 rounded-lg font-bold hover:bg-brand-dark transition-colors disabled:opacity-50 mt-2"
+            className="w-full bg-blue-600 text-white p-3 rounded-lg font-bold hover:bg-blue-700 transition-colors disabled:opacity-50 mt-2"
           >
             {cargando ? "Verificando..." : "Ingresar al Panel"}
           </button>

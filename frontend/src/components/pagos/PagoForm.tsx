@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "../../lib/supebase"; // Importación de la cliente de Supabase
+import { supabase } from "../../lib/supabase"; // Importación de la cliente de Supabase
 
 interface PagoFormProps {
   clienteInicial?: string;
