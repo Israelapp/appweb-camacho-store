@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "../../lib/supebase"; // Importación de la cliente de Supabase
 
 interface PagoFormProps {
   clienteInicial?: string;
@@ -43,18 +44,20 @@ export default function PagoForm({
     setMensajeExito(false);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/pago`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      // Inserción directa en la tabla 'pagos' de Supabase
+      const { error } = await supabase.from("pagos").insert([
+        {
           cliente,
           monto: Number(monto) || 0,
           metodo,
           fecha,
-        }),
-      });
+        },
+      ]);
 
-      if (res.ok) {
+      if (error) {
+        console.error("Error al guardar en Supabase:", error.message);
+        alert(`No se pudo procesar el pago: ${error.message}`);
+      } else {
         setMensajeExito(true);
         setCliente("");
         setMonto("");
@@ -63,16 +66,13 @@ export default function PagoForm({
 
         router.refresh();
 
-        // Ejecuta callback si existe (ej. cambiar pantalla o reiniciar carrito)
+        // Ejecuta callback si existe (ej. cambiar pantalla o reiniciar formulario)
         if (onExito) {
           onExito();
         }
-      } else {
-        console.error("Error al registrar el pago");
-        alert("No se pudo procesar el pago. Revisa los datos.");
       }
     } catch (error) {
-      console.error("Error de red:", error);
+      console.error("Error de conexión:", error);
       alert("Error de conexión con el servidor.");
     } finally {
       setCargando(false);
@@ -80,7 +80,7 @@ export default function PagoForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-4 bg-white rounded-xl shadow-sm">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-4 bg-white rounded-xl shadow-sm border border-gray-100">
       {mensajeExito && (
         <div className="p-3 bg-green-50 text-green-800 border border-green-200 rounded-lg text-sm text-center font-medium">
           ¡Pago registrado exitosamente!

@@ -1,9 +1,9 @@
-// src/app/page.tsx
 "use client";
 
 import { useState } from "react";
 import PagoForm from "../components/pagos/PagoForm";
-import QrDescarga from "../components/QrDescarga"; // Importa tu componente QR
+import QrDescarga from "../components/QrDescarga";
+import { supabase } from "../lib/supebase"; // Importación del cliente de Supabase
 
 export default function HomePage() {
   const [opcionActiva, setOpcionActiva] = useState<"reserva" | "pago">("reserva");
@@ -28,26 +28,26 @@ export default function HomePage() {
     setMensajeReserva(false);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reserva`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      // Inserción directa en la tabla 'reservas' de Supabase
+      const { error } = await supabase.from("reservas").insert([
+        {
           cliente: clienteReserva,
           litros: Number(litros),
           total: totalEstimado,
           fecha: fechaReserva,
-        }),
-      });
+        },
+      ]);
 
-      if (res.ok) {
+      if (error) {
+        console.error("Error en Supabase:", error.message);
+        alert(`Error al guardar la reserva: ${error.message}`);
+      } else {
         setMensajeReserva(true);
         setClienteReserva("");
         setLitros(20);
-      } else {
-        alert("Error al guardar la reserva");
       }
     } catch (error) {
-      console.error("Error de red:", error);
+      console.error("Error de conexión:", error);
       alert("Error de conexión al guardar la reserva.");
     } finally {
       setCargandoReserva(false);
