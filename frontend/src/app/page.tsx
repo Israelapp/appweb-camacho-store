@@ -10,7 +10,7 @@ import { obtenerTasaBCV } from "../lib/Bcv.Services";
 export default function HomePage() {
   const [opcionActiva, setOpcionActiva] = useState<"reserva" | "pago" | "ia">("reserva");
 
-  // Estados para Reserva (litros inicia en 0)
+  // Estados para Reserva
   const [clienteReserva, setClienteReserva] = useState("");
   const [litros, setLitros] = useState<number | string>(0);
   const [fechaReserva, setFechaReserva] = useState(
@@ -22,8 +22,8 @@ export default function HomePage() {
   // Estado para la tasa oficial del BCV
   const [tasaBCV, setTasaBCV] = useState<number>(0);
 
-  // Precio fijo a $1.00 por litro
-  const PRECIO_POR_LITRO = 1.00;
+  // 💧 REGLA DE PRECIOS: $0.80 USD por cada botellón de 19 Litros ($0.0421 USD / Litro)
+  const PRECIO_POR_LITRO = 0.80 / 19; 
   const totalEstimadoUSD = (Number(litros) || 0) * PRECIO_POR_LITRO;
   const totalEstimadoVES = tasaBCV > 0 ? totalEstimadoUSD * tasaBCV : 0;
 
@@ -39,7 +39,7 @@ export default function HomePage() {
   async function handleReservaSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!clienteReserva.trim() || Number(litros) <= 0) {
-      alert("Por favor, ingresa un cliente válido y una cantidad de litros mayor a 0.");
+      alert("Por favor, ingresa el nombre del cliente y una cantidad de litros mayor a 0.");
       return;
     }
 
@@ -62,7 +62,7 @@ export default function HomePage() {
       } else {
         setMensajeReserva(true);
         setClienteReserva("");
-        setLitros(0); // Reinicia a 0 tras guardar con éxito
+        setLitros(0);
       }
     } catch (error) {
       console.error("Error de conexión:", error);
@@ -151,7 +151,7 @@ export default function HomePage() {
                 min="0"
                 value={litros}
                 onChange={(e) => setLitros(e.target.value)}
-                placeholder="0"
+                placeholder="Ej. 19"
                 required
                 className="border border-gray-300 p-2.5 rounded-lg w-full text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -170,7 +170,7 @@ export default function HomePage() {
               />
             </div>
 
-            {/* Total estimado en USD ($1 por litro) y BS según la tasa del BCV */}
+            {/* Total estimado en USD ($0.80 por 19L) y Bolívares */}
             <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100 my-1">
               <div>
                 <span className="text-xs font-bold text-gray-500 block">Total estimado:</span>
@@ -182,7 +182,7 @@ export default function HomePage() {
               </div>
               <div className="text-right">
                 <span className="text-lg font-black text-brand block">
-                  ${totalEstimadoUSD.toFixed(2)}
+                  ${totalEstimadoUSD.toFixed(2)} USD
                 </span>
                 {tasaBCV > 0 && (
                   <span className="text-xs font-bold text-emerald-600 block">
