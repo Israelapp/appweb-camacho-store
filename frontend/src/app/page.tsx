@@ -1,39 +1,57 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PagoForm from "../components/pagos/PagoForm";
 import QrDescarga from "../components/QrDescarga";
-import { supabase } from "../lib/supabase"; // Importación del cliente de Supabase
+import GeneradorAI from "../components/inventario/GeneradorAI";
+import { supabase } from "../lib/supabase";
+import { obtenerTasaBCV } from "../lib/Bcv.Services";
 
 export default function HomePage() {
-  const [opcionActiva, setOpcionActiva] = useState<"reserva" | "pago">("reserva");
+  const [opcionActiva, setOpcionActiva] = useState<"reserva" | "pago" | "ia">("reserva");
 
-  // Estados para Reserva
+  // Estados para Reserva (litros inicia en 0)
   const [clienteReserva, setClienteReserva] = useState("");
-  const [litros, setLitros] = useState<number | string>(20);
+  const [litros, setLitros] = useState<number | string>(0);
   const [fechaReserva, setFechaReserva] = useState(
     new Date().toISOString().split("T")[0]
   );
   const [cargandoReserva, setCargandoReserva] = useState(false);
   const [mensajeReserva, setMensajeReserva] = useState(false);
 
-  const PRECIO_POR_LITRO = 0.50;
-  const totalEstimado = (Number(litros) || 0) * PRECIO_POR_LITRO;
+  // Estado para la tasa oficial del BCV
+  const [tasaBCV, setTasaBCV] = useState<number>(0);
+
+  // Precio fijo a $1.00 por litro
+  const PRECIO_POR_LITRO = 1.00;
+  const totalEstimadoUSD = (Number(litros) || 0) * PRECIO_POR_LITRO;
+  const totalEstimadoVES = tasaBCV > 0 ? totalEstimadoUSD * tasaBCV : 0;
+
+  // Cargar tasa del BCV al montar la página
+  useEffect(() => {
+    async function cargarTasa() {
+      const tasa = await obtenerTasaBCV();
+      setTasaBCV(tasa);
+    }
+    cargarTasa();
+  }, []);
 
   async function handleReservaSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!clienteReserva.trim() || !litros) return;
+    if (!clienteReserva.trim() || Number(litros) <= 0) {
+      alert("Por favor, ingresa un cliente válido y una cantidad de litros mayor a 0.");
+      return;
+    }
 
     setCargandoReserva(true);
     setMensajeReserva(false);
 
     try {
-      // Inserción directa en la tabla 'reservas' de Supabase
       const { error } = await supabase.from("reservas").insert([
         {
           cliente: clienteReserva,
           litros: Number(litros),
-          total: totalEstimado,
+          total: totalEstimadoUSD,
           fecha: fechaReserva,
         },
       ]);
@@ -44,7 +62,7 @@ export default function HomePage() {
       } else {
         setMensajeReserva(true);
         setClienteReserva("");
-        setLitros(20);
+        setLitros(0); // Reinicia a 0 tras guardar con éxito
       }
     } catch (error) {
       console.error("Error de conexión:", error);
@@ -64,8 +82,8 @@ export default function HomePage() {
           <p className="text-sm text-gray-500">Recarga de agua purificada</p>
         </div>
 
-        {/* Selector de Pestañas */}
-        <div className="grid grid-cols-2 gap-1 p-1 bg-gray-100 rounded-xl">
+        {/* Selector de Pestañas (3 opciones) */}
+        <div className="grid grid-cols-3 gap-1 p-1 bg-gray-100 rounded-xl">
           <button
             type="button"
             onClick={() => setOpcionActiva("reserva")}
@@ -75,7 +93,7 @@ export default function HomePage() {
                 : "text-gray-500 hover:text-gray-700"
             }`}
           >
-            📋 Crear Reserva
+            📋 Reserva
           </button>
           <button
             type="button"
@@ -86,7 +104,18 @@ export default function HomePage() {
                 : "text-gray-500 hover:text-gray-700"
             }`}
           >
-            💳 Método de Pago
+            💳 Pago
+          </button>
+          <button
+            type="button"
+            onClick={() => setOpcionActiva("ia")}
+            className={`py-2 text-xs font-bold rounded-lg transition-all ${
+              opcionActiva === "ia"
+                ? "bg-white text-brand shadow-sm"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            ✨ Ficha IA
           </button>
         </div>
 
@@ -119,10 +148,10 @@ export default function HomePage() {
               </label>
               <input
                 type="number"
-                min="1"
+                min="0"
                 value={litros}
                 onChange={(e) => setLitros(e.target.value)}
-                placeholder="Cantidad de litros"
+                placeholder="0"
                 required
                 className="border border-gray-300 p-2.5 rounded-lg w-full text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -141,9 +170,26 @@ export default function HomePage() {
               />
             </div>
 
+            {/* Total estimado en USD ($1 por litro) y BS según la tasa del BCV */}
             <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100 my-1">
-              <span className="text-xs font-bold text-gray-500">Total estimado:</span>
-              <span className="text-lg font-black text-brand">${totalEstimado.toFixed(2)}</span>
+              <div>
+                <span className="text-xs font-bold text-gray-500 block">Total estimado:</span>
+                {tasaBCV > 0 && (
+                  <span className="text-[10px] font-medium text-gray-400">
+                    BCV: {tasaBCV.toFixed(2)} Bs/$
+                  </span>
+                )}
+              </div>
+              <div className="text-right">
+                <span className="text-lg font-black text-brand block">
+                  ${totalEstimadoUSD.toFixed(2)}
+                </span>
+                {tasaBCV > 0 && (
+                  <span className="text-xs font-bold text-emerald-600 block">
+                    Bs. {totalEstimadoVES.toFixed(2)}
+                  </span>
+                )}
+              </div>
             </div>
 
             <button
@@ -160,6 +206,13 @@ export default function HomePage() {
         {opcionActiva === "pago" && (
           <div>
             <PagoForm />
+          </div>
+        )}
+
+        {/* Generador de Fichas con IA */}
+        {opcionActiva === "ia" && (
+          <div>
+            <GeneradorAI />
           </div>
         )}
 

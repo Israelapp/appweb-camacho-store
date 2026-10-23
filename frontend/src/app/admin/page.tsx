@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
+import StockGauge from "../../components/StockGauge";
 
 interface Reserva {
   id: number;
@@ -127,10 +128,11 @@ export default function AdminPage() {
       {/* Notificación Flotante */}
       {notificacion && (
         <div
-          className={`fixed top-5 right-5 z-50 px-4 py-3 rounded-xl shadow-lg border text-sm font-semibold transition-all transform translate-y-0 print:hidden ${notificacion.tipo === "exito"
+          className={`fixed top-5 right-5 z-50 px-4 py-3 rounded-xl shadow-lg border text-sm font-semibold transition-all transform translate-y-0 print:hidden ${
+            notificacion.tipo === "exito"
               ? "bg-green-600 text-white border-green-700"
               : "bg-red-600 text-white border-red-700"
-            }`}
+          }`}
         >
           {notificacion.tipo === "exito" ? "✅ " : "⚠️ "} {notificacion.mensaje}
         </div>
@@ -174,20 +176,25 @@ export default function AdminPage() {
         </div>
       </div>
 
+      {/* 💧 Componente de Stock e Inventario de los 5 Tanques (12,000L) */}
+      <StockGauge litrosReservados={totalLitros} />
+
       {/* Pestañas y Filtros */}
       <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-200 flex flex-col sm:flex-row gap-4 justify-between items-stretch sm:items-center print:hidden">
         <div className="flex bg-gray-100 p-1 rounded-xl">
           <button
             onClick={() => setTab("reservas")}
-            className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${tab === "reservas" ? "bg-white text-blue-600 shadow-sm" : "text-gray-500"
-              }`}
+            className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${
+              tab === "reservas" ? "bg-white text-blue-600 shadow-sm" : "text-gray-500"
+            }`}
           >
             📋 Reservas ({reservasFiltradas.length})
           </button>
           <button
             onClick={() => setTab("pagos")}
-            className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${tab === "pagos" ? "bg-white text-blue-600 shadow-sm" : "text-gray-500"
-              }`}
+            className={`px-4 py-2 text-xs font-bold rounded-lg transition-all ${
+              tab === "pagos" ? "bg-white text-blue-600 shadow-sm" : "text-gray-500"
+            }`}
           >
             💳 Pagos ({pagosFiltrados.length})
           </button>
@@ -271,12 +278,13 @@ export default function AdminPage() {
                           <select
                             value={est}
                             onChange={(e) => handleCambiarEstado(r.id, e.target.value)}
-                            className={`print:hidden p-1.5 rounded-lg font-bold text-xs border border-transparent focus:outline-none cursor-pointer transition-colors ${est === "pendiente"
+                            className={`print:hidden p-1.5 rounded-lg font-bold text-xs border border-transparent focus:outline-none cursor-pointer transition-colors ${
+                              est === "pendiente"
                                 ? "bg-amber-100 text-amber-800"
                                 : est === "entregado"
-                                  ? "bg-emerald-100 text-emerald-800"
-                                  : "bg-rose-100 text-rose-800"
-                              }`}
+                                ? "bg-emerald-100 text-emerald-800"
+                                : "bg-rose-100 text-rose-800"
+                            }`}
                           >
                             <option value="pendiente">🟡 Pendiente</option>
                             <option value="entregado">🟢 Entregado</option>

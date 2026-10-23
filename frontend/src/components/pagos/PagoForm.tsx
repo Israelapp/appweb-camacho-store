@@ -125,7 +125,7 @@ export default function PagoForm({
           type="text"
           value={metodo}
           onChange={(e) => setMetodo(e.target.value)}
-          placeholder="Efectivo, Bizum, Transferencia..."
+          placeholder="Efectivo, Pago Movil, Transferencia..."
           required
           className="border border-gray-200 p-2.5 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
         />
