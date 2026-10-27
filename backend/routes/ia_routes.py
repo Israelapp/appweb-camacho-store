@@ -3,6 +3,7 @@ import time
 from google.genai.errors import APIError
 from flask import Blueprint, request, jsonify
 
+
 api_key = "AQ.Ab8RN6Ls7UOVUt2mQy6ElwRB3TO5sYiLQYOJgJ2BGLNGqnLEpA"
 
 from google import genai
@@ -11,8 +12,8 @@ import pydantic
 
 ai_bp = Blueprint('ai', __name__)
 
-if not api_key or "AQUÍ_PEGAS" in api_key:
-    raise ValueError("Por favor pega tu clave de Gemini API dentro de la variable api_key en ia_routes.py")
+api_key = os.environ.get("AQ.Ab8RN6Ls7UOVUt2mQy6ElwRB3TO5sYiLQYOJgJ2BGLNGqnLEpA")
+raise ValueError("AQ.Ab8RN6Ls7UOVUt2mQy6ElwRB3TO5sYiLQYOJgJ2BGLNGqnLEpA")
 
 client = genai.Client(api_key=api_key)
 
