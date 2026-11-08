@@ -3,12 +3,11 @@
 import { useEffect, useState } from "react";
 import PagoForm from "../components/pagos/PagoForm";
 import QrDescarga from "../components/QrDescarga";
-import GeneradorAI from "../components/inventario/GeneradorAI";
-import { supabase } from "../lib/supabase";
+import PublicAssistant from "../components/PublicAssistant"; // 🤖 Asistente de productos y precios
 import { obtenerTasaBCV } from "../lib/Bcv.Services";
 
 export default function HomePage() {
-  const [opcionActiva, setOpcionActiva] = useState<"reserva" | "pago" | "ia">("reserva");
+  const [opcionActiva, setOpcionActiva] = useState<"reserva" | "pago">("reserva");
 
   // Estados para Reserva
   const [clienteReserva, setClienteReserva] = useState("");
@@ -47,23 +46,26 @@ export default function HomePage() {
     setMensajeReserva(false);
 
     try {
-      const { error } = await supabase.from("reservas").insert([
-        {
+      const response = await fetch("http://localhost:5000/reservas", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           cliente: clienteReserva,
           litros: Number(litros),
           total: totalEstimadoUSD,
           fecha: fechaReserva,
-        },
-      ]);
+        }),
+      });
 
-      if (error) {
-        console.error("Error en Supabase:", error.message);
-        alert(`Error al guardar la reserva: ${error.message}`);
-      } else {
-        setMensajeReserva(true);
-        setClienteReserva("");
-        setLitros(0);
+      if (!response.ok) {
+        throw new Error("Error al registrar la reserva en el servidor.");
       }
+
+      setMensajeReserva(true);
+      setClienteReserva("");
+      setLitros(0);
     } catch (error) {
       console.error("Error de conexión:", error);
       alert("Error de conexión al guardar la reserva.");
@@ -73,7 +75,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50 relative">
       <div className="w-full max-w-md bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col gap-5">
         
         {/* Encabezado */}
@@ -82,8 +84,8 @@ export default function HomePage() {
           <p className="text-sm text-gray-500">Recarga de agua purificada</p>
         </div>
 
-        {/* Selector de Pestañas (3 opciones) */}
-        <div className="grid grid-cols-3 gap-1 p-1 bg-gray-100 rounded-xl">
+        {/* Selector de Pestañas (2 opciones: Reserva y Pago) */}
+        <div className="grid grid-cols-2 gap-1 p-1 bg-gray-100 rounded-xl">
           <button
             type="button"
             onClick={() => setOpcionActiva("reserva")}
@@ -105,17 +107,6 @@ export default function HomePage() {
             }`}
           >
             💳 Pago
-          </button>
-          <button
-            type="button"
-            onClick={() => setOpcionActiva("ia")}
-            className={`py-2 text-xs font-bold rounded-lg transition-all ${
-              opcionActiva === "ia"
-                ? "bg-white text-brand shadow-sm"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            ✨ Ficha IA
           </button>
         </div>
 
@@ -170,7 +161,7 @@ export default function HomePage() {
               />
             </div>
 
-            {/* Total estimado en USD ($0.80 por 19L) y Bolívares */}
+            {/* Total estimado en USD y Bolívares */}
             <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg border border-gray-100 my-1">
               <div>
                 <span className="text-xs font-bold text-gray-500 block">Total estimado:</span>
@@ -209,17 +200,13 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* Generador de Fichas con IA */}
-        {opcionActiva === "ia" && (
-          <div>
-            <GeneradorAI />
-          </div>
-        )}
-
         {/* Componente QrDescarga */}
         <QrDescarga />
 
       </div>
+
+      {/* 💬 Widget flotante del Asistente Público de Gemini */}
+      <PublicAssistant />
     </div>
   );
 }
