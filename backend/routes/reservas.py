@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from extensions import db
 from models.Reservas import Reservas
+from .whatssap import enviar_alerta_whatsapp
 
 reservas_bp = Blueprint ('reservas', __name__)
 
@@ -17,23 +18,32 @@ def obtener_reserva():
 def crear_reserva():
     datos = request.get_json()
 
-
     if not datos or "litros" not in datos:
         return jsonify ({"error": "Los litros son obligatorio"}), 400
     if not datos or "cliente" not in datos:
         return jsonify ({"error": "Debe incluir los datos correctos"}), 400
-
 
     reserva_nueva = Reservas (
         cliente=datos['cliente'],
         litros=datos.get('litros', 0), 
         estado=datos.get('estado', 'pendiente'),
         fecha=datos.get ('fecha'),
-    
     )
 
     db.session.add(reserva_nueva)
     db.session.commit()
+
+    # ⚡ Llamamos a la función de WhatsApp justo después de guardar con éxito
+    try:
+        enviar_alerta_whatsapp(
+            cliente=reserva_nueva.cliente,
+            litros=reserva_nueva.litros,
+            total=getattr(reserva_nueva, 'total', 0),  # Por si tienes el campo total o lo calculas
+            fecha=reserva_nueva.fecha or "Sin fecha especificada"
+        )
+    except Exception as e:
+        print("Error al disparar la alerta de WhatsApp:", e)
+
     return jsonify(reserva_nueva.to_dict()), 201
 
 
@@ -44,7 +54,6 @@ def delete_reservas(reserva_id):
     if not reserva:
         return jsonify({"error": "Cliente no encontrado"}), 404
         
-    
     db.session.delete(reserva)
     db.session.commit()
     return jsonify ({"Eliminado": "Reserva Eliminado"})
@@ -52,13 +61,11 @@ def delete_reservas(reserva_id):
 @reservas_bp.route("/api/reservas/<int:reserva_id>", methods = ["PUT"])
 def actualizar_reserva (reserva_id):
     reserva = Reservas.query.get(reserva_id)
-
     
     if not reserva:
         return jsonify({"error":"Reserva no encontrada"}), 404
 
     datos = request.get_json()
-
 
     if "cliente" in datos:
         reserva.cliente = datos["cliente"]

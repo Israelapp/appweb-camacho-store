@@ -9,3 +9,4 @@ beautifulsoup4
 google-genai
 supabase
 pydantic
+twilio

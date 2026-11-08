@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabase";
 import StockGauge from "../../components/StockGauge";
+import { useAdminRealtime } from "../../hooks/useAdminRealtime";
 
 interface Reserva {
   id: number;
@@ -75,6 +76,9 @@ export default function AdminPage() {
   useEffect(() => {
     cargarDatos();
   }, []);
+
+  // ⚡ Hook modular de tiempo real (mantiene este archivo limpio)
+  useAdminRealtime(setReservas, mostrarNotificacion);
 
   const handleCambiarEstado = async (id: number, nuevoEstado: string) => {
     try {
