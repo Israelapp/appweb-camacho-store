@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "../../lib/supabase"; // Importación de la cliente de Supabase
 
 interface PagoFormProps {
   clienteInicial?: string;
@@ -44,32 +43,35 @@ export default function PagoForm({
     setMensajeExito(false);
 
     try {
-      // Inserción directa en la tabla 'pagos' de Supabase
-      const { error } = await supabase.from("pagos").insert([
-        {
+      // Petición hacia el backend de Flask en lugar de Supabase
+      const response = await fetch("http://localhost:5000/pagos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           cliente,
           monto: Number(monto) || 0,
           metodo,
           fecha,
-        },
-      ]);
+        }),
+      });
 
-      if (error) {
-        console.error("Error al guardar en Supabase:", error.message);
-        alert(`No se pudo procesar el pago: ${error.message}`);
-      } else {
-        setMensajeExito(true);
-        setCliente("");
-        setMonto("");
-        setMetodo("");
-        setFecha(hoy);
+      if (!response.ok) {
+        throw new Error("No se pudo procesar el pago en el servidor.");
+      }
 
-        router.refresh();
+      setMensajeExito(true);
+      setCliente("");
+      setMonto("");
+      setMetodo("");
+      setFecha(hoy);
 
-        // Ejecuta callback si existe (ej. cambiar pantalla o reiniciar formulario)
-        if (onExito) {
-          onExito();
-        }
+      router.refresh();
+
+      // Ejecuta callback si existe (ej. cambiar pantalla o reiniciar formulario)
+      if (onExito) {
+        onExito();
       }
     } catch (error) {
       console.error("Error de conexión:", error);
@@ -125,7 +127,7 @@ export default function PagoForm({
           type="text"
           value={metodo}
           onChange={(e) => setMetodo(e.target.value)}
-          placeholder="Efectivo, Pago Movil, Transferencia..."
+          placeholder="Efectivo, Pago Móvil, Transferencia..."
           required
           className="border border-gray-200 p-2.5 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
         />

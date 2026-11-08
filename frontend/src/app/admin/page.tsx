@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "../../lib/supabase";
 import StockGauge from "../../components/StockGauge";
 import { useAdminRealtime } from "../../hooks/useAdminRealtime";
 
@@ -47,27 +46,26 @@ export default function AdminPage() {
     setTimeout(() => setNotificacion(null), 3500);
   };
 
-  // Cargar datos
+  // Cargar datos desde el backend de Flask
   const cargarDatos = async () => {
     setCargando(true);
     try {
-      const { data: resData, error: resErr } = await supabase
-        .from("reservas")
-        .select("*")
-        .order("created_at", { ascending: false });
+      const [resRes, pagRes] = await Promise.all([
+        fetch("http://localhost:5000/reservas"),
+        fetch("http://localhost:5000/pagos"),
+      ]);
 
-      const { data: pagData, error: pagErr } = await supabase
-        .from("pagos")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (resErr) console.error("Error al cargar reservas:", resErr.message);
-      if (pagErr) console.error("Error al cargar pagos:", pagErr.message);
-
-      if (resData) setReservas(resData as Reserva[]);
-      if (pagData) setPagos(pagData as Pago[]);
+      if (resRes.ok) {
+        const resData = await resRes.json();
+        setReservas(resData);
+      }
+      if (pagRes.ok) {
+        const pagData = await pagRes.json();
+        setPagos(pagData);
+      }
     } catch (err) {
       console.error("Error de conexión:", err);
+      mostrarNotificacion("Error al conectar con el servidor", "error");
     } finally {
       setCargando(false);
     }
@@ -77,24 +75,27 @@ export default function AdminPage() {
     cargarDatos();
   }, []);
 
-  // ⚡ Hook modular de tiempo real (mantiene este archivo limpio)
+  // ⚡ Hook modular de tiempo real
   useAdminRealtime(setReservas, mostrarNotificacion);
 
   const handleCambiarEstado = async (id: number, nuevoEstado: string) => {
     try {
-      const { error } = await supabase
-        .from("reservas")
-        .update({ estado: nuevoEstado })
-        .eq("id", id);
+      const response = await fetch(`http://localhost:5000/reservas/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ estado: nuevoEstado }),
+      });
 
-      if (error) {
-        mostrarNotificacion(`Error al actualizar estado: ${error.message}`, "error");
-      } else {
-        setReservas((prev) =>
-          prev.map((r) => (r.id === id ? { ...r, estado: nuevoEstado as any } : r))
-        );
-        mostrarNotificacion(`Reserva #${id} actualizada a "${nuevoEstado.toUpperCase()}"`);
+      if (!response.ok) {
+        throw new Error("No se pudo actualizar el estado");
       }
+
+      setReservas((prev) =>
+        prev.map((r) => (r.id === id ? { ...r, estado: nuevoEstado as any } : r))
+      );
+      mostrarNotificacion(`Reserva #${id} actualizada a "${nuevoEstado.toUpperCase()}"`);
     } catch (err) {
       mostrarNotificacion("Error de conexión al actualizar", "error");
     }
