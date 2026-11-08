@@ -13,11 +13,12 @@ from routes.reportes_pdf import reportes_pdf_bp
 from routes.ia_routes import ai_bp
 from routes.bcv import bcv_bp
 from routes.assistant import assistant_bp
+from routes.recargas import recargas_bp  # <-- Importamos el nuevo blueprint
+
 app = Flask(__name__)
 CORS(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///inventario.db'
-
 
 db.init_app(app)
 
@@ -30,11 +31,11 @@ app.register_blueprint(reportes_pdf_bp)
 app.register_blueprint(ai_bp, url_prefix='/api/ai')
 app.register_blueprint(bcv_bp)
 app.register_blueprint(assistant_bp)
+app.register_blueprint(recargas_bp)     # <-- Registramos el nuevo blueprint
 
 @app.route("/")
 def home():
     return ""
-
 
 with app.app_context():
     db.create_all()
