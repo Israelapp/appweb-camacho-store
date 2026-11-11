@@ -59,14 +59,17 @@ export default function AdminPage() {
     setTimeout(() => setNotificacion(null), 3500);
   };
 
+  // URL base de la API (Producción en Render o desarrollo local)
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.camacho-store.com";
+
   // Cargar datos desde Flask
   const cargarDatos = async () => {
     setCargando(true);
     try {
       const [resRes, pagRes, recRes] = await Promise.all([
-        fetch("http://localhost:5000/reservas"),
-        fetch("http://localhost:5000/pagos"),
-        fetch("http://localhost:5000/recargas").catch(() => ({ ok: false, json: async () => [] })),
+        fetch(`${API_URL}/api/reservas`),
+        fetch(`${API_URL}/api/pagos`),
+        fetch(`${API_URL}/api/recargas`).catch(() => ({ ok: false, json: async () => [] })),
       ]);
 
       if (resRes.ok) setReservas(await resRes.json());
@@ -88,7 +91,7 @@ export default function AdminPage() {
 
   const handleCambiarEstado = async (id: number, nuevoEstado: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/reservas/${id}`, {
+      const response = await fetch(`${API_URL}/api/reservas/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ estado: nuevoEstado }),

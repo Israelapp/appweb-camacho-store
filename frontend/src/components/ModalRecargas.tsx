@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import { useState } from "react";
 
@@ -22,6 +22,9 @@ export default function ModalRecarga({
   const [notasRecarga, setNotasRecarga] = useState("");
   const [cargando, setCargando] = useState(false);
 
+  // URL base de la API (Producción en Render o desarrollo local)
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.camacho-store.com";
+
   if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,7 +32,7 @@ export default function ModalRecarga({
     setCargando(true);
 
     try {
-      const response = await fetch("http://localhost:5000/recargas", {
+      const response = await fetch(`${API_URL}/api/recargas`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

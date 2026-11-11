@@ -28,6 +28,9 @@ export default function PagoForm({
   const [cargando, setCargando] = useState(false);
   const [mensajeExito, setMensajeExito] = useState(false);
 
+  // URL base de la API (Producción en Render o desarrollo local)
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.camacho-store.com";
+
   // Sincroniza si cambian las props desde el componente padre
   useEffect(() => {
     if (clienteInicial) setCliente(clienteInicial);
@@ -43,8 +46,8 @@ export default function PagoForm({
     setMensajeExito(false);
 
     try {
-      // Petición hacia el backend de Flask en lugar de Supabase
-      const response = await fetch("http://localhost:5000/pagos", {
+      // Petición hacia el backend de Flask en Render (con el prefijo /api/)
+      const response = await fetch(`${API_URL}/api/pagos`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
