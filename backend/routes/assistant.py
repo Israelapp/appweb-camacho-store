@@ -22,9 +22,9 @@ def assistant_chat():
         Pregunta del cliente: {user_message}
         """
         
-        # Usamos el modelo oficial compatible con el nuevo SDK
+        # Actualizado al modelo vigente indicado por la API
         response = client.models.generate_content(
-            model='gemini-2.0-flash',
+            model='gemini-2.5-flash',
             contents=prompt,
         )
         
