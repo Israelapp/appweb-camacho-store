@@ -5,10 +5,13 @@ export function useAdminRealtime(
   mostrarNotificacion: (mensaje: string, tipo?: "exito" | "error") => void
 ) {
   useEffect(() => {
-    // Sincronización automática (polling) con el backend de Flask cada 10 segundos
+    // Si la variable no está disponible en el build, usa la URL de producción por defecto
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.camacho-store.com";
+
+    // Sincronización automática (polling) con el backend cada 10 segundos
     const interval = setInterval(async () => {
       try {
-        const response = await fetch("http://localhost:5000/reservas");
+        const response = await fetch(`${API_URL}/api/reservas`);
         if (response.ok) {
           const data = await response.json();
           setReservas(data);
