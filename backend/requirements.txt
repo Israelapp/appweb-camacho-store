@@ -7,6 +7,6 @@ gunicorn==23.0.0
 requests
 beautifulsoup4
 google-genai
-supabase
 pydantic
 twilio
+flask-cors
