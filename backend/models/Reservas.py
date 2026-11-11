@@ -7,6 +7,7 @@ class Reservas (db.Model):
     fecha = db.Column (db.Date)
     litros = db.Column(db.Integer, default=0)
     estado = db.Column (db.String(80), nullable=False,  default ="pendiente")
+    total = db.Column(db.Float, nullable=True)
 
     def to_dict(self):
         return{
